@@ -4,4 +4,4 @@ pub static DOWNLOAD_MIRROR: [&str; 3] = [
     "https://api.nerinyan.moe/d",
 ];
 
-pub const DOWNLOAD_PATH: &str = "downloads";
+pub const DOWNLOAD_PATH: &str = "./downloads";
