@@ -3,16 +3,27 @@ name = "osu-collector-dl"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+[features]
+default = []
+persistence = ["eframe/persistence", "serde"]
+
+[workspace]
+members = ["crates/osu-collector"]
 
 [dependencies]
-async-recursion = "1.0.4"
-futures-util = "0.3.28"
-indicatif = "0.17.5"
+eframe = "0.23.0"
+image = "0.24.7"
 log = "0.4.19"
-rand = "0.8.5"
-reqwest = { version = "0.11.18", features = ["json", "stream", "blocking"] }
-serde = { version = "1.0.171", features = ["std", "serde_derive"] }
-serde_derive = "1.0.171"
-serde_json = "1.0.102"
-tokio = { version = "1.29.1", features = ["macros", "rt-multi-thread", "fs"] }
+poll-promise = { version = "0.3.0", features = ["tokio"] }
+
+[dependencies.serde]
+version = "1.0.130"
+features = ["derive"]
+optional = true
+
+[dependencies.tokio]
+version = "1.29.1"
+features = ["macros", "rt-multi-thread"]
+
+[dependencies.osu-collector]
+path = "crates/osu-collector"
