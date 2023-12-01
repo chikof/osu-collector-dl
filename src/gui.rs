@@ -12,7 +12,7 @@ impl eframe::App for CollectorApp {
 				if let Some(beatmapsets) = download.ready() {
 					self.downloading = false;
 					self.collection_id.clear();
-					println!("Downloaded {} beatmapsets", beatmapsets.len());
+					log::info!("Downloaded {} beatmapsets", beatmapsets.len());
 				}
 			}
 		}
@@ -37,17 +37,15 @@ impl eframe::App for CollectorApp {
 					//     egui::ProgressBar::new()
 					//     )
 					//                             );
-					} else {
-						if ui
-							.button("Download")
-							.on_hover_text("Download collection")
-							.clicked()
-						{
-							let collection_id = self.collection_id.parse().unwrap();
-							self.download = Some(CollectorApp::download_collection(collection_id));
-							self.downloading = true;
-						};
-					}
+					} else if ui
+						.button("Download")
+						.on_hover_text("Download collection")
+						.clicked()
+					{
+						let collection_id = self.collection_id.parse().unwrap();
+						self.download = Some(CollectorApp::download_collection(collection_id));
+						self.downloading = true;
+					};
 				})
 			});
 		});

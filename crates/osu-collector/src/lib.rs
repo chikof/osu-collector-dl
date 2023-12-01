@@ -121,7 +121,7 @@ impl OsuCollector {
 			// println!("{}", ((new as f64/total_size as f64) as f64 * 10.0).round() / 10.0 );
 		}
 
-		return true;
+		true
 	}
 
 	pub fn version() -> String {
