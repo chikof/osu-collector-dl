@@ -114,7 +114,7 @@ impl OsuCollector {
 				.or(Err(format!("Error while downloading file from {}", url)))
 				.unwrap();
 			file.write_all(&chunk)
-				.or(Err(format!("Error while writing to file")))
+				.or(Err("Error while writing to file"))
 				.unwrap();
 			// let new = min(downloaded + (chunk.len() as u64), total_size);
 			// downloaded = new;
