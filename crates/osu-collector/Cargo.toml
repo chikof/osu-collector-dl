@@ -10,7 +10,7 @@ futures-util = "0.3.29"
 log = "0.4.19"
 rand = "0.8.5"
 serde_derive = "1.0.193"
-serde_json = "1.0.102"
+serde_json = "1.0.108"
 
 [dependencies.reqwest]
 version = "0.11.22"
