@@ -18,12 +18,14 @@ mod utils;
 #[tokio::main]
 async fn main() {
 	let native_options = eframe::NativeOptions {
-		// always_on_top: false,
-		decorated: true,
-		initial_window_size: Some(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT)),
-		resizable: false,
-		transparent: true,
-		icon_data: Some(utils::load_icon()),
+		viewport: egui::ViewportBuilder::default()
+			.with_inner_size(egui::vec2(WINDOW_WIDTH, WINDOW_HEIGHT))
+			// .with_always_on_top()
+			.with_drag_and_drop(false)
+			.with_decorations(true)
+			.with_resizable(false)
+			.with_transparent(true)
+			.with_icon(utils::load_icon()),
 		..Default::default()
 	};
 
