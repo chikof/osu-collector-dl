@@ -18,13 +18,15 @@ pub struct Collection {
 	pub bpm_spread: BpmSpread,
 	pub beatmapsets: Vec<Beatmapset>,
 	pub unknown_checksums: Vec<Value>,
-	// pub favourited_by: Vec<i64>,
+	pub favourited_by: Option<Vec<i64>>,
 	pub favourites: i64,
 }
 
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Uploader {
+	#[serde(rename = "avatarURL")]
+	pub avatar_url: String,
 	pub rank: Option<i64>,
 	pub id: i64,
 	pub username: String,
