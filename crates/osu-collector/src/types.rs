@@ -25,7 +25,7 @@ pub struct Collection {
 #[derive(Default, Debug, Clone, PartialEq, Serialize, Deserialize)]
 #[serde(rename_all = "camelCase")]
 pub struct Uploader {
-	pub rank: i64,
+	pub rank: Option<i64>,
 	pub id: i64,
 	pub username: String,
 }
