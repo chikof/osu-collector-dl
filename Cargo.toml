@@ -18,7 +18,7 @@ members = ["crates/osu-collector"]
 [dependencies]
 eframe = "0.24.1"
 image = "0.24.7"
-log = "0.4.20"
+log = "0.4.21"
 poll-promise = { version = "0.3.0", features = ["tokio"] }
 
 [dependencies.serde]
