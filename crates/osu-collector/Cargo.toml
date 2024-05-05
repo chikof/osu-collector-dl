@@ -13,7 +13,7 @@ serde_derive = "1.0.193"
 serde_json = "1.0.108"
 
 [dependencies.reqwest]
-version = "0.11.22"
+version = "0.12.0"
 features = ["blocking", "json", "stream"]
 
 [dependencies.serde]
