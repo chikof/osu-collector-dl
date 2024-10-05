@@ -5,8 +5,8 @@ edition = "2021"
 
 [dependencies]
 async-recursion = "1.0.5"
-futures = "0.3.29"
-futures-util = "0.3.29"
+futures = "0.3.30"
+futures-util = "0.3.30"
 log = "0.4.20"
 rand = "0.8.5"
 serde_derive = "1.0.193"
