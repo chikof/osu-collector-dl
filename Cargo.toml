@@ -22,7 +22,7 @@ log = "0.4.20"
 poll-promise = { version = "0.3.0", features = ["tokio"] }
 
 [dependencies.serde]
-version = "1.0.193"
+version = "1.0.200"
 features = ["derive"]
 optional = true
 
