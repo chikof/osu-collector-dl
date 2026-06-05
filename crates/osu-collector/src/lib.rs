@@ -5,9 +5,18 @@ pub mod types;
 use self::types::{Beatmapset, Collection};
 use futures::{FutureExt, future::BoxFuture};
 use futures_util::StreamExt;
+use osu_db::CollectionList;
+use osu_db::collection::Collection as OCollection;
 use reqwest::{Client, Error};
-use std::{fs::File, io::Write, path::Path};
-use tokio::fs;
+use std::path::{Path, PathBuf};
+use tokio::{
+    fs::{self, File},
+    io::AsyncWriteExt,
+};
+
+pub mod osu {
+    pub use osu_db::*;
+}
 
 fn get_random_element<T>(array: &[T]) -> Option<&T> {
     let index = rand::random_range(0..array.len());
@@ -49,19 +58,45 @@ impl OsuCollector {
         Ok(collection)
     }
 
-    pub async fn download_collection(&self, id: usize) -> Vec<Beatmapset> {
+    pub async fn download_collection(&self, id: usize, db: Option<PathBuf>) -> Vec<Beatmapset> {
         let collection = self.get_collection(id).await.unwrap();
         let mut new_beatmapsets: Vec<Beatmapset> = Vec::new();
+        let mut hashes: Vec<Option<String>> = Vec::new();
 
         for beatmap in &collection.beatmapsets {
             if !self.download(beatmap.id.try_into().unwrap()).await {
                 continue;
             }
 
+            if db.is_some() {
+                for beatmap in &beatmap.beatmaps {
+                    hashes.push(Some(beatmap.checksum.clone()));
+                }
+            }
+
             new_beatmapsets.push(beatmap.clone());
         }
 
+        if let Some(db) = db {
+            let mut collections = CollectionList::from_file(&db).unwrap();
+
+            let collection = OCollection {
+                name: Some(collection.name),
+                beatmap_hashes: hashes,
+            };
+
+            collections.collections.push(collection);
+            collections.to_file(db).unwrap();
+
+            log::info!("Succeed!!")
+        };
+
         new_beatmapsets
+    }
+
+    pub fn inspect_collection(&self, db: PathBuf) -> Vec<OCollection> {
+        let collection = CollectionList::from_file(db).unwrap();
+        collection.collections
     }
 
     fn download(&self, id: usize) -> BoxFuture<'_, bool> {
@@ -105,6 +140,7 @@ impl OsuCollector {
 
         // download chunks
         let mut file = File::create(filename.clone())
+            .await
             .or(Err(format!("Failed to create file '{}'", filename)))
             .unwrap();
         // let mut downloaded: u64 = 0;
@@ -115,6 +151,7 @@ impl OsuCollector {
                 .or(Err(format!("Error while downloading file from {}", url)))
                 .unwrap();
             file.write_all(&chunk)
+                .await
                 .or(Err("Error while writing to file"))
                 .unwrap();
             // let new = min(downloaded + (chunk.len() as u64), total_size);

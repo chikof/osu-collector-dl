@@ -11,6 +11,7 @@ use eframe::egui;
 
 mod app;
 mod defines;
+mod error;
 mod gui;
 mod utils;
 

@@ -8,5 +8,5 @@ pub const FONT_SIZE: f32 = 12.0;
 pub const FONT_FAMILY: FontFamily = FontFamily::Monospace;
 
 // dimensions of main window
-pub const WINDOW_WIDTH: f32 = 550.0;
+pub const WINDOW_WIDTH: f32 = 525.0;
 pub const WINDOW_HEIGHT: f32 = 341.0;

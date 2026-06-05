@@ -1,17 +1,20 @@
+use std::path::PathBuf;
+
 use crate::defines::FONT_FAMILY;
 use crate::defines::FONT_SIZE;
 use eframe::epaint::FontId;
 use osu_collector::OsuCollector;
+use osu_collector::osu::collection::Collection;
 use osu_collector::types::Beatmapset;
 use poll_promise::Promise;
 
-// We derive Deserialize/Serialize so we can persist app state on shutdown.
-#[cfg_attr(feature = "persistence", derive(serde::Deserialize, serde::Serialize))]
-#[cfg_attr(feature = "persistence", serde(default))] // if we add new fields, give them default values when deserializing old state
 pub struct CollectorApp {
     pub collection_id: String,
     pub downloading: bool,
-    pub rt: tokio::runtime::Runtime,
+    pub collection_path: Option<String>,
+    pub save_collection: bool,
+    pub collections_size: usize,
+    pub collections: Vec<Collection>,
     pub download: Option<Promise<Vec<Beatmapset>>>,
 }
 
@@ -20,10 +23,12 @@ impl Default for CollectorApp {
         Self {
             collection_id: String::new(),
             downloading: false,
-            rt: tokio::runtime::Builder::new_multi_thread()
-                .enable_all()
-                .build()
-                .unwrap(),
+            collection_path: Some(
+                "/home/chiko/Projects/osu-collector-dl/collection.db".to_string(),
+            ),
+            collections_size: 0,
+            collections: Vec::new(),
+            save_collection: false,
             download: None,
         }
     }
@@ -41,20 +46,18 @@ impl CollectorApp {
         style.override_font_id = Some(font);
         ctx.set_global_style(style);
 
-        // Load previous app state (if any).
-        // Note that you must enable the `persistence` feature for this to work.
-        #[cfg(feature = "persistence")]
-        if let Some(storage) = cc.storage {
-            return eframe::get_value(storage, eframe::APP_KEY).unwrap_or_default();
-        }
-
         Default::default()
     }
 
-    pub fn download_collection(id: usize) -> Promise<Vec<Beatmapset>> {
+    pub fn download_collection(id: usize, path: Option<PathBuf>) -> Promise<Vec<Beatmapset>> {
         Promise::spawn_async(async move {
             let client = OsuCollector::default();
-            client.download_collection(id).await
+            client.download_collection(id, path).await
         })
+    }
+
+    pub fn collections(&self) -> Vec<Collection> {
+        let client = OsuCollector::default();
+        client.inspect_collection(self.collection_path.clone().map(PathBuf::from).unwrap())
     }
 }

@@ -9,6 +9,7 @@
       pkgs.libxkbcommon
       pkgs.libGL
       pkgs.wayland
+      pkgs.cargo-watch
     ]
     ++ lib.optionals pkgs.stdenv.isLinux [
       pkgs.libXcursor
