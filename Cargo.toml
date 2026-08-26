@@ -17,7 +17,7 @@ members = ["crates/osu-collector"]
 resolver = "3"
 
 [dependencies]
-eframe = "0.34.3"
+eframe = "0.36.0"
 image = "0.25.10"
 log = "0.4.32"
 thiserror = "2.0.18"
